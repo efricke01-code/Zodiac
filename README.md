@@ -35,10 +35,30 @@ Run them separately if you prefer two terminals: `npm run dev:server` and `npm r
 
 ```bash
 npm run build
+npm start
 ```
 
-Builds the server to `server/dist` and the client to `client/dist` (a static bundle you can serve
-with any static host, pointed at a deployed instance of the API).
+`npm run build` builds the server to `server/dist` and the client to `client/dist`. `npm start`
+then runs a single Node process that serves both the API and the built client from one port
+(`PORT`, default 4000) — handy for deploying as one service instead of two.
+
+## Deploying it so others can use it
+
+The simplest free option is [Render](https://render.com):
+
+1. Push this repo to your own GitHub account (already done if you're reading this from there).
+2. On Render, choose **New → Web Service**, connect the repo, and it should pick up the included
+   `render.yaml` automatically (build command `npm run install:all && npm run build`, start command
+   `npm start`). If it doesn't auto-detect, enter those commands yourself.
+3. Deploy. Render gives you a public `https://your-app.onrender.com` URL — that's the link to share.
+
+Any other host that runs a persistent Node web service (Railway, Fly.io, a plain VPS, etc.) works
+the same way: install dependencies, `npm run build`, then `npm start`, exposing whatever port it
+sets via the `PORT` environment variable. (Serverless/static-only hosts like plain Vercel or Netlify
+won't work as-is since the API needs a long-running Node process.)
+
+Note for free tiers: services on Render's free plan sleep after a period of inactivity and take
+~30-60 seconds to wake up on the next visit — expected, not a bug.
 
 ## How it works
 

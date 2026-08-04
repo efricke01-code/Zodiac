@@ -8,6 +8,7 @@
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build": "npm run build --prefix server && npm run build --prefix client",
+    "start": "node server/dist/index.js",
     "typecheck": "npm run typecheck --prefix server && cd client && npx tsc -b && cd .."
   },
   "devDependencies": {
