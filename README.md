@@ -70,9 +70,11 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
 - **Birth Chart**: enter a date, time, and place. The place is geocoded via OpenStreetMap's free
   Nominatim service — self-throttled server-side to at most ~1 request/second with a 24-hour result
   cache and a retry on rate-limit responses, since Nominatim's usage policy is strict and shared
-  hosting IPs (e.g. Render's free tier) can trip it even from other tenants' traffic — and the local
-  time is converted to UTC using the place's real IANA time zone (via `geo-tz` + `luxon`, so
-  historical DST rules are respected). The server then computes the
+  hosting IPs (e.g. Render's free tier) can trip it even from other tenants' traffic. If Nominatim
+  still won't respond, it automatically falls back to [Photon](https://photon.komoot.io) (Komoot's
+  free, keyless OSM geocoder on separate infrastructure), so a rate limit on one doesn't take the
+  feature down. The local time is then converted to UTC using the place's real IANA time zone (via
+  `geo-tz` + `luxon`, so historical DST rules are respected). The server then computes the
   Ascendant, Midheaven, all ten planets plus the mean lunar North Node, house placements, and major
   aspects (conjunction, sextile, square, trine, opposition). The result is rendered as both a list
   and an interactive SVG chart wheel, and you can click any planet row — as well as the Ascendant
