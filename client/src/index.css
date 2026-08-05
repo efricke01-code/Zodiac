@@ -277,12 +277,11 @@ input, select {
 .placement-table td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); }
 .placement-row { cursor: pointer; }
 .placement-row:hover { background: var(--accent-soft); }
-.placement-row--angle { cursor: default; }
-.placement-row--angle:hover { background: none; }
 .expand-indicator { color: var(--text-muted); text-align: right; }
 .placement-detail-row td { background: var(--bg); color: var(--text); font-size: 0.9rem; }
 .glyph { display: inline-block; width: 1.4em; text-align: center; }
 .glyph--wide { width: auto; min-width: 2.2em; font-weight: 700; font-size: 0.8em; color: var(--text-muted); }
+.row-note { color: var(--text-muted); font-size: 0.82em; font-weight: 400; }
 .retrograde-tag { color: var(--danger); font-size: 0.8em; }
 
 /* Horoscope */

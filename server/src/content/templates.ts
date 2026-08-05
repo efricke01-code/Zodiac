@@ -56,6 +56,33 @@ export function planetSignParagraph(planet: PlanetKey, sign: Sign): string {
   );
 }
 
+/** Paragraph describing the natal Ascendant (Rising Sign). */
+export function ascendantParagraph(sign: Sign): string {
+  const s = SIGN_META[sign];
+  return (
+    `Your Ascendant is in ${sign} — this is commonly known as your "Rising Sign," and it's one of the ` +
+    `most important placements in a chart, often ranked right alongside your Sun and Moon signs. ` +
+    `While your Sun describes your core identity, your Ascendant describes your outward style: the ` +
+    `first impression you give, your instinctive reactions, and even your physical demeanor — the ` +
+    `"mask" you meet the world with. ${sign} rising tends to come across as ${article(s.essence)} ${s.essence}, ` +
+    `leaning on ${s.keywords.slice(0, 2).join(" and ")} — though the shadow side to watch for is ${s.shadow}. ` +
+    `Ruled by ${s.ruler}, this sign also marks the start of your House 1, the House of Self.`
+  );
+}
+
+/** Paragraph describing the natal Midheaven (MC). */
+export function midheavenParagraph(sign: Sign): string {
+  const s = SIGN_META[sign];
+  return (
+    `Your Midheaven is in ${sign} — often shortened to "MC." It's the highest point of the chart, ` +
+    `associated with your career, public reputation, and the direction your life is heading — the ` +
+    `image you build for the wider world, as opposed to your private inner life. A ${sign} Midheaven ` +
+    `tends to seek recognition through ${s.keywords.slice(0, 2).join(" and ")}, while the growth edge ` +
+    `to watch for professionally is ${s.shadow}. Ruled by ${s.ruler}, this sign also marks the start ` +
+    `of your House 10, the House of Vocation.`
+  );
+}
+
 /** Paragraph explaining a transiting planet aspecting a natal planet. */
 export function transitToNatalParagraph(
   transitingPlanet: PlanetKey,

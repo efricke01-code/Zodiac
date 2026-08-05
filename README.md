@@ -72,7 +72,8 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
   (via `geo-tz` + `luxon`, so historical DST rules are respected). The server then computes the
   Ascendant, Midheaven, all ten planets plus the mean lunar North Node, house placements, and major
   aspects (conjunction, sextile, square, trine, opposition). The result is rendered as both a list
-  and an interactive SVG chart wheel, and you can click any planet row for a plain-English paragraph
+  and an interactive SVG chart wheel, and you can click any planet row — as well as the Ascendant
+  (labeled with its common name, "Rising Sign") and Midheaven rows — for a plain-English paragraph
   about that placement.
 - **Horoscope**: reuses the birth chart you already calculated (stored in your browser only — the
   server is stateless and never stores birth data). For each period, it samples upcoming transiting

@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import type { NatalChart, PlanetKey, Sign } from "../api/types";
 import { PLANET_GLYPHS, SIGN_GLYPHS } from "../api/types";
-import { fetchPlacementInterpretation } from "../api/client";
+import { fetchPlacementInterpretation, fetchAscendantInterpretation, fetchMidheavenInterpretation } from "../api/client";
 
 function formatDegree(degree: number): string {
   const d = Math.floor(degree);
@@ -9,24 +9,38 @@ function formatDegree(degree: number): string {
   return `${d}°${m.toString().padStart(2, "0")}'`;
 }
 
-export function PlacementTable({ chart }: { chart: NatalChart }) {
-  const [openPlanet, setOpenPlanet] = useState<PlanetKey | null>(null);
-  const [paragraphs, setParagraphs] = useState<Partial<Record<PlanetKey, string>>>({});
-  const [loading, setLoading] = useState<PlanetKey | null>(null);
+type RowKey = PlanetKey | "Ascendant" | "Midheaven";
 
-  async function toggle(planet: PlanetKey, sign: Sign, house: number, retrograde: boolean) {
-    if (openPlanet === planet) {
-      setOpenPlanet(null);
+export function PlacementTable({ chart }: { chart: NatalChart }) {
+  const [openRow, setOpenRow] = useState<RowKey | null>(null);
+  const [paragraphs, setParagraphs] = useState<Partial<Record<RowKey, string>>>({});
+  const [loading, setLoading] = useState<RowKey | null>(null);
+
+  async function togglePlanet(planet: PlanetKey, sign: Sign, house: number, retrograde: boolean) {
+    await toggle(planet, () => fetchPlacementInterpretation(planet, sign, house, retrograde));
+  }
+
+  async function toggleAscendant(sign: Sign) {
+    await toggle("Ascendant", () => fetchAscendantInterpretation(sign));
+  }
+
+  async function toggleMidheaven(sign: Sign) {
+    await toggle("Midheaven", () => fetchMidheavenInterpretation(sign));
+  }
+
+  async function toggle(key: RowKey, fetchParagraph: () => Promise<{ paragraph: string }>) {
+    if (openRow === key) {
+      setOpenRow(null);
       return;
     }
-    setOpenPlanet(planet);
-    if (!paragraphs[planet]) {
-      setLoading(planet);
+    setOpenRow(key);
+    if (!paragraphs[key]) {
+      setLoading(key);
       try {
-        const { paragraph } = await fetchPlacementInterpretation(planet, sign, house, retrograde);
-        setParagraphs((prev) => ({ ...prev, [planet]: paragraph }));
+        const { paragraph } = await fetchParagraph();
+        setParagraphs((prev) => ({ ...prev, [key]: paragraph }));
       } catch {
-        setParagraphs((prev) => ({ ...prev, [planet]: "Could not load interpretation." }));
+        setParagraphs((prev) => ({ ...prev, [key]: "Could not load interpretation." }));
       } finally {
         setLoading(null);
       }
@@ -45,15 +59,15 @@ export function PlacementTable({ chart }: { chart: NatalChart }) {
             <Fragment key={p.planet}>
               <tr
                 className="placement-row"
-                onClick={() => toggle(p.planet, p.sign, p.house, p.retrograde)}
+                onClick={() => togglePlanet(p.planet, p.sign, p.house, p.retrograde)}
               >
                 <td><span className="glyph">{PLANET_GLYPHS[p.planet]}</span> {p.planet.replace("NorthNode", "North Node")}</td>
                 <td><span className="glyph">{SIGN_GLYPHS[p.sign]}</span> {p.sign}</td>
                 <td>{formatDegree(p.degree)}{p.retrograde && <span className="retrograde-tag"> ℞</span>}</td>
                 <td>{p.house}</td>
-                <td className="expand-indicator">{openPlanet === p.planet ? "▲" : "▼"}</td>
+                <td className="expand-indicator">{openRow === p.planet ? "▲" : "▼"}</td>
               </tr>
-              {openPlanet === p.planet && (
+              {openRow === p.planet && (
                 <tr className="placement-detail-row">
                   <td colSpan={5}>
                     {loading === p.planet ? "Loading…" : paragraphs[p.planet]}
@@ -62,16 +76,36 @@ export function PlacementTable({ chart }: { chart: NatalChart }) {
               )}
             </Fragment>
           ))}
-          <tr className="placement-row placement-row--angle">
-            <td colSpan={2}><span className="glyph glyph--wide">ASC</span> Ascendant</td>
+          <tr
+            className="placement-row placement-row--angle"
+            onClick={() => toggleAscendant(chart.ascendant.sign)}
+          >
+            <td colSpan={2}><span className="glyph glyph--wide">ASC</span> Ascendant <span className="row-note">(Rising Sign)</span></td>
             <td colSpan={2}>{SIGN_GLYPHS[chart.ascendant.sign]} {chart.ascendant.sign} {formatDegree(chart.ascendant.degree)}</td>
-            <td></td>
+            <td className="expand-indicator">{openRow === "Ascendant" ? "▲" : "▼"}</td>
           </tr>
-          <tr className="placement-row placement-row--angle">
+          {openRow === "Ascendant" && (
+            <tr className="placement-detail-row">
+              <td colSpan={5}>
+                {loading === "Ascendant" ? "Loading…" : paragraphs["Ascendant"]}
+              </td>
+            </tr>
+          )}
+          <tr
+            className="placement-row placement-row--angle"
+            onClick={() => toggleMidheaven(chart.midheaven.sign)}
+          >
             <td colSpan={2}><span className="glyph glyph--wide">MC</span> Midheaven</td>
             <td colSpan={2}>{SIGN_GLYPHS[chart.midheaven.sign]} {chart.midheaven.sign} {formatDegree(chart.midheaven.degree)}</td>
-            <td></td>
+            <td className="expand-indicator">{openRow === "Midheaven" ? "▲" : "▼"}</td>
           </tr>
+          {openRow === "Midheaven" && (
+            <tr className="placement-detail-row">
+              <td colSpan={5}>
+                {loading === "Midheaven" ? "Loading…" : paragraphs["Midheaven"]}
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
 

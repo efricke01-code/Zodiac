@@ -66,6 +66,14 @@ export function fetchPlanetSignInterpretation(planet: PlanetKey, sign: Sign) {
   return request<{ paragraph: string }>(`/interpret/planet-sign?planet=${planet}&sign=${sign}`);
 }
 
+export function fetchAscendantInterpretation(sign: Sign) {
+  return request<{ paragraph: string }>(`/interpret/ascendant?sign=${sign}`);
+}
+
+export function fetchMidheavenInterpretation(sign: Sign) {
+  return request<{ paragraph: string }>(`/interpret/midheaven?sign=${sign}`);
+}
+
 export function fetchMoonEventInterpretation(
   phase: MoonPhaseName, eventSign: Sign, natalSign: Sign, natalPlanet: PlanetKey = "Sun",
 ) {

@@ -11,7 +11,10 @@ import { SIGN_META } from "../content/signs.js";
 import { HOUSE_META } from "../content/houses.js";
 import { PLANET_META } from "../content/planets.js";
 import { ASPECT_META } from "../content/aspectMeta.js";
-import { planetSignHouseParagraph, planetSignParagraph, signHouseParagraph, moonEventForSignParagraph, ingressForSignParagraph, transitToNatalParagraph } from "../content/templates.js";
+import {
+  planetSignHouseParagraph, planetSignParagraph, signHouseParagraph, moonEventForSignParagraph,
+  ingressForSignParagraph, transitToNatalParagraph, ascendantParagraph, midheavenParagraph,
+} from "../content/templates.js";
 import { ASPECT_DEFS } from "../astro/aspects.js";
 import { ELEMENT_META, MODALITY_META, CHART_TERMS } from "../content/guide.js";
 
@@ -171,6 +174,24 @@ apiRouter.get("/interpret/placement", (req, res) => {
     const house = z.coerce.number().int().min(1).max(12).parse(req.query.house);
     const retrograde = req.query.retrograde === "true";
     res.json({ paragraph: planetSignHouseParagraph(planet, sign, house, retrograde) });
+  } catch (err) {
+    handleError(res, err);
+  }
+});
+
+apiRouter.get("/interpret/ascendant", (req, res) => {
+  try {
+    const sign = signEnum.parse(req.query.sign);
+    res.json({ paragraph: ascendantParagraph(sign) });
+  } catch (err) {
+    handleError(res, err);
+  }
+});
+
+apiRouter.get("/interpret/midheaven", (req, res) => {
+  try {
+    const sign = signEnum.parse(req.query.sign);
+    res.json({ paragraph: midheavenParagraph(sign) });
   } catch (err) {
     handleError(res, err);
   }
