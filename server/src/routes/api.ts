@@ -11,7 +11,7 @@ import { SIGN_META } from "../content/signs.js";
 import { HOUSE_META } from "../content/houses.js";
 import { PLANET_META } from "../content/planets.js";
 import { ASPECT_META } from "../content/aspectMeta.js";
-import { planetSignHouseParagraph, signHouseParagraph, moonEventForSignParagraph, transitToNatalParagraph } from "../content/templates.js";
+import { planetSignHouseParagraph, planetSignParagraph, signHouseParagraph, moonEventForSignParagraph, transitToNatalParagraph } from "../content/templates.js";
 import { ASPECT_DEFS } from "../astro/aspects.js";
 
 export const apiRouter = Router();
@@ -177,6 +177,16 @@ apiRouter.get("/interpret/sign-house", (req, res) => {
     const sign = signEnum.parse(req.query.sign);
     const house = z.coerce.number().int().min(1).max(12).parse(req.query.house);
     res.json({ paragraph: signHouseParagraph(sign, house) });
+  } catch (err) {
+    handleError(res, err);
+  }
+});
+
+apiRouter.get("/interpret/planet-sign", (req, res) => {
+  try {
+    const planet = planetEnum.parse(req.query.planet);
+    const sign = signEnum.parse(req.query.sign);
+    res.json({ paragraph: planetSignParagraph(planet, sign) });
   } catch (err) {
     handleError(res, err);
   }

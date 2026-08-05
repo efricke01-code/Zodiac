@@ -3,6 +3,7 @@ import { Nav } from "./components/Nav";
 import { BirthChartPage } from "./pages/BirthChartPage";
 import { HoroscopePage } from "./pages/HoroscopePage";
 import { PlanetaryMovementsPage } from "./pages/PlanetaryMovementsPage";
+import { ExplorersPage } from "./pages/ExplorersPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<BirthChartPage />} />
           <Route path="/horoscope" element={<HoroscopePage />} />
           <Route path="/movements" element={<PlanetaryMovementsPage />} />
+          <Route path="/explorers" element={<ExplorersPage />} />
         </Routes>
       </main>
       <footer className="app-footer">

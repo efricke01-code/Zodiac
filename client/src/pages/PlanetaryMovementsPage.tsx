@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchCurrentSky, fetchUpcomingEvents, fetchSignHouseInterpretation, fetchMoonEventInterpretation } from "../api/client";
-import type { TransitPlacement, UpcomingEventsResponse, Sign, MoonPhaseName, PlanetKey } from "../api/types";
-import { PLANET_GLYPHS, SIGN_GLYPHS, SIGNS, PLANET_KEYS } from "../api/types";
+import { Link } from "react-router-dom";
+import { fetchCurrentSky, fetchUpcomingEvents } from "../api/client";
+import type { TransitPlacement, UpcomingEventsResponse, Sign, MoonPhaseName } from "../api/types";
+import { PLANET_GLYPHS, SIGN_GLYPHS } from "../api/types";
 
 function formatDegree(degree: number): string {
   const d = Math.floor(degree);
@@ -70,50 +71,12 @@ export function PlanetaryMovementsPage() {
 
   const feed = useMemo(() => (events ? buildFeed(events) : []), [events]);
 
-  // Sign + house explorer
-  const [exploreSign, setExploreSign] = useState<Sign>("Leo");
-  const [exploreHouse, setExploreHouse] = useState(1);
-  const [exploreParagraph, setExploreParagraph] = useState<string | null>(null);
-  const [exploreLoading, setExploreLoading] = useState(false);
-
-  async function runSignHouseExplorer() {
-    setExploreLoading(true);
-    try {
-      const { paragraph } = await fetchSignHouseInterpretation(exploreSign, exploreHouse);
-      setExploreParagraph(paragraph);
-    } catch (err) {
-      setExploreParagraph(err instanceof Error ? err.message : "Could not load interpretation.");
-    } finally {
-      setExploreLoading(false);
-    }
-  }
-
-  // Moon-event-for-my-sign explorer
-  const [moonPhase, setMoonPhase] = useState<MoonPhaseName>("full-moon");
-  const [moonSign, setMoonSign] = useState<Sign>("Leo");
-  const [natalSign, setNatalSign] = useState<Sign>("Taurus");
-  const [natalPlanet, setNatalPlanet] = useState<PlanetKey>("Sun");
-  const [moonParagraph, setMoonParagraph] = useState<string | null>(null);
-  const [moonLoading, setMoonLoading] = useState(false);
-
-  async function runMoonExplorer() {
-    setMoonLoading(true);
-    try {
-      const { paragraph } = await fetchMoonEventInterpretation(moonPhase, moonSign, natalSign, natalPlanet);
-      setMoonParagraph(paragraph);
-    } catch (err) {
-      setMoonParagraph(err instanceof Error ? err.message : "Could not load interpretation.");
-    } finally {
-      setMoonLoading(false);
-    }
-  }
-
   return (
     <section className="page">
       <h1>Planetary Movements</h1>
       <p className="page-intro">
-        What the sky is doing right now, what's coming up, and a look-up tool for what any sign,
-        house, or lunation means.
+        What the sky is doing right now, and what's coming up. Looking for the sign, house, planet,
+        or lunation look-up tools? Head to <Link to="/explorers">Explorers</Link>.
       </p>
 
       {error && <p className="form-error">{error}</p>}
@@ -151,64 +114,14 @@ export function PlanetaryMovementsPage() {
             <span className="event-date">{new Date(item.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
             <span className="event-text">{item.text}</span>
             {item.kind === "moon" && (item.phase === "full-moon" || item.phase === "new-moon") && (
-              <button
-                className="btn-link"
-                onClick={() => { setMoonPhase(item.phase); setMoonSign(item.sign); }}
-              >
+              <Link className="btn-link" to={`/explorers?phase=${item.phase}&sign=${item.sign}`}>
                 Explain this →
-              </button>
+              </Link>
             )}
           </li>
         ))}
         {feed.length === 0 && !loading && <li>No events found in this window.</li>}
       </ul>
-
-      <h2>Sign + House Explorer</h2>
-      <p className="page-intro">
-        Pick a zodiac sign and a house — for example Leo in the 12th House — and get a paragraph on
-        what that combination tends to mean.
-      </p>
-      <div className="explorer-row">
-        <select value={exploreSign} onChange={(e) => setExploreSign(e.target.value as Sign)}>
-          {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <select value={exploreHouse} onChange={(e) => setExploreHouse(Number(e.target.value))}>
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => <option key={h} value={h}>House {h}</option>)}
-        </select>
-        <button className="btn-primary" onClick={runSignHouseExplorer} disabled={exploreLoading}>
-          {exploreLoading ? "Loading…" : "Get Interpretation"}
-        </button>
-      </div>
-      {exploreParagraph && <p className="explainer-result">{exploreParagraph}</p>}
-
-      <h2>Lunation Explorer</h2>
-      <p className="page-intro">
-        A Full Moon in Leo means something different depending on your own chart. Pick the lunation
-        and a natal placement (e.g. your Sun sign) to see what it means for you.
-      </p>
-      <div className="explorer-row">
-        <select value={moonPhase} onChange={(e) => setMoonPhase(e.target.value as MoonPhaseName)}>
-          <option value="new-moon">New Moon</option>
-          <option value="full-moon">Full Moon</option>
-          <option value="first-quarter">First Quarter Moon</option>
-          <option value="last-quarter">Last Quarter Moon</option>
-        </select>
-        <span>in</span>
-        <select value={moonSign} onChange={(e) => setMoonSign(e.target.value as Sign)}>
-          {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <span>for my</span>
-        <select value={natalPlanet} onChange={(e) => setNatalPlanet(e.target.value as PlanetKey)}>
-          {PLANET_KEYS.map((p) => <option key={p} value={p}>{p.replace("NorthNode", "North Node")}</option>)}
-        </select>
-        <select value={natalSign} onChange={(e) => setNatalSign(e.target.value as Sign)}>
-          {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <button className="btn-primary" onClick={runMoonExplorer} disabled={moonLoading}>
-          {moonLoading ? "Loading…" : "Explain"}
-        </button>
-      </div>
-      {moonParagraph && <p className="explainer-result">{moonParagraph}</p>}
     </section>
   );
 }

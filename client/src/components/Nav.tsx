@@ -14,6 +14,9 @@ export function Nav() {
         <NavLink to="/movements" className={({ isActive }) => (isActive ? "nav-link nav-link--active" : "nav-link")}>
           Planetary Movements
         </NavLink>
+        <NavLink to="/explorers" className={({ isActive }) => (isActive ? "nav-link nav-link--active" : "nav-link")}>
+          Explorers
+        </NavLink>
       </nav>
     </header>
   );

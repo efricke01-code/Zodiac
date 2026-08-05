@@ -41,6 +41,21 @@ export function signHouseParagraph(sign: Sign, house: number): string {
   );
 }
 
+/** Generic paragraph for the "pick a planet + a sign" explorer tool (no house involved). */
+export function planetSignParagraph(planet: PlanetKey, sign: Sign): string {
+  const p = PLANET_META[planet];
+  const s = SIGN_META[sign];
+  const inDomicile = p.title === s.ruler;
+  const domicileClause = inDomicile
+    ? ` This is what astrologers call a "domicile" placement — ${sign} is ${p.title}'s own home sign, so this energy tends to express itself clearly, comfortably, and with real strength.`
+    : "";
+  return (
+    `${p.title} represents ${p.represents}. Placed in ${sign}, it takes on ${article(s.essence)} ${s.essence} quality: ` +
+    `expect themes of ${s.keywords.slice(0, 2).join(" and ")} to color how it shows up, tempered by ${sign}'s pull toward ${s.shadow}.` +
+    `${domicileClause} Ruled by ${s.ruler}, ${sign} filters ${p.title}'s themes of ${p.keyword} through a ${s.element.toLowerCase()}, ${s.modality.toLowerCase()} lens.`
+  );
+}
+
 /** Paragraph explaining a transiting planet aspecting a natal planet. */
 export function transitToNatalParagraph(
   transitingPlanet: PlanetKey,

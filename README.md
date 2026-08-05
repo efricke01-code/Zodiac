@@ -1,9 +1,9 @@
 # Zodiac
 
-A full astrology web app in three parts: a **Birth Chart** calculator, a personal **Horoscope**
-(daily/weekly/monthly/yearly, generated from real current transits against your natal chart), and
-a **Planetary Movements** explorer for what's happening in the sky right now, what's coming up, and
-a look-up tool for any sign/house/lunation combination.
+A full astrology web app in four parts: a **Birth Chart** calculator, a personal **Horoscope**
+(daily/weekly/monthly/yearly, generated from real current transits against your natal chart), a
+**Planetary Movements** page for what's happening in the sky right now and what's coming up, and
+an **Explorers** page with three look-up tools (sign + house, planet + sign, and lunation).
 
 Planetary positions are computed with [astronomy-engine](https://github.com/cosinekitty/astronomy)
 (geocentric, apparent, true-ecliptic-of-date — the standard tropical zodiac reference frame), not
@@ -15,7 +15,7 @@ latitudes), with Equal House as an option.
 
 ```
 server/   Express + TypeScript API: chart math, geocoding, timezone resolution, horoscope/content generation
-client/   Vite + React + TypeScript UI: three pages (Birth Chart, Horoscope, Planetary Movements)
+client/   Vite + React + TypeScript UI: four pages (Birth Chart, Horoscope, Planetary Movements, Explorers)
 ```
 
 ## Running it locally
@@ -73,10 +73,13 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
   server is stateless and never stores birth data). For each period, it samples upcoming transiting
   positions, finds the tightest-orb aspects to your natal planets (favoring slower, longer-lasting
   transits for the monthly/yearly views), and generates a paragraph per aspect.
-- **Planetary Movements**: shows today's planetary positions, a scrollable feed of upcoming sign
+- **Planetary Movements**: shows today's planetary positions and a scrollable feed of upcoming sign
   ingresses, retrograde/direct stations, and Moon phases (found numerically, not from a static
-  table), plus two look-up tools — pick any sign + house for a paragraph, or pick a Moon phase +
-  sign + a natal placement (e.g. "Full Moon in Leo, for a Taurus Sun") for a tailored explanation.
+  table). Full/New Moon entries link straight into the matching Lunation Explorer tool, pre-filled.
+- **Explorers**: three independent look-up tools on one page — pick a sign + house (e.g. Leo in the
+  12th House), a planet + sign (e.g. Pluto in Scorpio — called out specially when it's the planet's
+  own "domicile" sign), or a Moon phase + sign + a natal placement (e.g. "Full Moon in Leo, for a
+  Taurus Sun") — each returns a plain-English paragraph.
 
 ## Notes
 

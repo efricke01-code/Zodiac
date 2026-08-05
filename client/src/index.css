@@ -302,6 +302,8 @@ input, select {
 }
 .event-date { color: var(--text-muted); width: 4.5rem; flex-shrink: 0; font-variant-numeric: tabular-nums; }
 .event-item--station .event-text { color: var(--danger); font-weight: 600; }
+.explorer-block { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+.explorer-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .explorer-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin: 0.75rem 0; }
 .explainer-result {
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem;

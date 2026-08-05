@@ -58,6 +58,10 @@ export function fetchPlacementInterpretation(planet: PlanetKey, sign: Sign, hous
   );
 }
 
+export function fetchPlanetSignInterpretation(planet: PlanetKey, sign: Sign) {
+  return request<{ paragraph: string }>(`/interpret/planet-sign?planet=${planet}&sign=${sign}`);
+}
+
 export function fetchMoonEventInterpretation(
   phase: MoonPhaseName, eventSign: Sign, natalSign: Sign, natalPlanet: PlanetKey = "Sun",
 ) {
