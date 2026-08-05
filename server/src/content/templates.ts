@@ -5,6 +5,15 @@ import { HOUSE_META } from "./houses.js";
 import { PLANET_META } from "./planets.js";
 import { ASPECT_META } from "./aspectMeta.js";
 
+function article(word: string): string {
+  return /^[aeiou]/i.test(word) ? "an" : "a";
+}
+
+/** "Mars", "Venus", ... but "the Sun" / "the Moon", since English wants the article there. */
+function rulerName(ruler: string): string {
+  return ruler === "Sun" || ruler === "Moon" ? `the ${ruler}` : ruler;
+}
+
 /** "1st", "2nd", "3rd", "4th", ... "12th" */
 function ordinal(n: number): string {
   if (n % 100 >= 11 && n % 100 <= 13) return `${n}th`;
@@ -44,7 +53,7 @@ export function signHouseParagraph(sign: Sign, house: number): string {
   return (
     `${sign} is ${s.essence}. In your ${ordinal(house)} House, that comes out through ${h.expression}, ` +
     `most often through ${s.keywords[0]} and ${s.keywords[1]}. The growth edge to watch for is ${s.shadow}. ` +
-    `Ruled by ${s.ruler}, this placement channels ${s.ruler}'s themes into that part of your life.`
+    `Ruled by ${rulerName(s.ruler)}, this placement channels ${rulerName(s.ruler)}'s themes into that part of your life.`
   );
 }
 
@@ -59,7 +68,7 @@ export function planetSignParagraph(planet: PlanetKey, sign: Sign): string {
   return (
     `${p.title} governs ${p.represents}. In ${sign}, that comes out as ${s.essence} — ` +
     `expect ${s.keywords[0]} and ${s.keywords[1]} to color how it shows up, tempered by a pull toward ${s.shadow}.` +
-    `${domicileClause} Ruled by ${s.ruler}, ${sign} filters ${p.title}'s themes of ${p.keyword} through a ${s.element.toLowerCase()}, ${s.modality.toLowerCase()} lens.`
+    `${domicileClause} Ruled by ${rulerName(s.ruler)}, ${sign} filters ${p.title}'s themes of ${p.keyword} through ${article(s.element)} ${s.element.toLowerCase()}, ${s.modality.toLowerCase()} lens.`
   );
 }
 
@@ -73,7 +82,7 @@ export function ascendantParagraph(sign: Sign): string {
     `first impression you give, your instinctive reactions, and even your physical demeanor — the ` +
     `"mask" you meet the world with. ${sign} rising tends to come across as ${s.essence}, ` +
     `leaning on ${s.keywords[0]} and ${s.keywords[1]} — though the shadow side to watch for is ${s.shadow}. ` +
-    `Ruled by ${s.ruler}, this sign also marks the start of your House 1, the House of Self.`
+    `Ruled by ${rulerName(s.ruler)}, this sign also marks the start of your House 1, the House of Self.`
   );
 }
 
@@ -85,7 +94,7 @@ export function midheavenParagraph(sign: Sign): string {
     `associated with your career, public reputation, and the direction your life is heading — the ` +
     `image you build for the wider world, as opposed to your private inner life. A ${sign} Midheaven ` +
     `tends to seek recognition through ${s.keywords[0]} and ${s.keywords[1]}, while the growth edge ` +
-    `to watch for professionally is ${s.shadow}. Ruled by ${s.ruler}, this sign also marks the start ` +
+    `to watch for professionally is ${s.shadow}. Ruled by ${rulerName(s.ruler)}, this sign also marks the start ` +
     `of your House 10, the House of Vocation.`
   );
 }
@@ -139,8 +148,8 @@ export function ingressForSignParagraph(
 
   const sameElement = s.element === ns.element;
   const relation = sameElement
-    ? `Because ${toSign} and your ${natalSign} ${np.title} share the ${s.element} element, this transit should feel natural and easy to work with`
-    : `Because ${toSign} is ${s.element} and your ${natalSign} ${np.title} is ${ns.element}, this transit may ask your ${np.title} to stretch a little outside its comfort zone`;
+    ? `this transit should feel natural and easy to work with, since ${toSign} and ${natalSign} both share the ${s.element} element`
+    : `this transit may ask your ${np.title} to stretch a little outside its comfort zone, since ${toSign} is ${s.element} while ${natalSign} is ${ns.element}`;
 
   const focus = np.title === "Sun" ? "your sense of identity and purpose" : np.represents;
 
@@ -178,8 +187,8 @@ export function moonEventForSignParagraph(
 
   const sameElement = es.element === ns.element;
   const relation = sameElement
-    ? `Because ${eventSign} and ${natalSign} share the ${es.element} element, this lunation should feel supportive and easy to work with`
-    : `Because ${eventSign} is ${es.element} and your ${natalSign} ${p.title} is ${ns.element}, this lunation may feel like it is asking your ${p.title} to stretch a little outside its comfort zone`;
+    ? `this lunation should feel supportive and easy to work with, since ${eventSign} and ${natalSign} both share the ${es.element} element`
+    : `this lunation may ask your ${p.title} to stretch a little outside its comfort zone, since ${eventSign} is ${es.element} while ${natalSign} is ${ns.element}`;
 
   return (
     `The ${phaseLabel[phase]} in ${eventSign} brings ${phaseMeaning[phase]}, colored by ${eventSign}'s themes of ${es.keywords[0]} and ${es.keywords[1]}. ` +

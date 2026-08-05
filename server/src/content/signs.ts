@@ -39,7 +39,7 @@ export const SIGN_META: Record<Sign, SignMeta> = {
     sign: "Leo", element: "Fire", modality: "Fixed", ruler: "Sun",
     keywords: ["confidence", "creativity", "generosity", "pride"],
     essence: "warm, expressive, and driven to create and be seen",
-    shadow: "a need for validation that can tip into pride or drama",
+    shadow: "neediness for validation that can tip into pride or drama",
   },
   Virgo: {
     sign: "Virgo", element: "Earth", modality: "Mutable", ruler: "Mercury",
@@ -57,7 +57,7 @@ export const SIGN_META: Record<Sign, SignMeta> = {
     sign: "Scorpio", element: "Water", modality: "Fixed", ruler: "Pluto",
     keywords: ["intensity", "transformation", "depth", "control"],
     essence: "intense, perceptive, and unafraid of what lies beneath the surface",
-    shadow: "a guarded need for control and difficulty trusting others",
+    shadow: "guardedness around control and difficulty trusting others",
   },
   Sagittarius: {
     sign: "Sagittarius", element: "Fire", modality: "Mutable", ruler: "Jupiter",
@@ -69,7 +69,7 @@ export const SIGN_META: Record<Sign, SignMeta> = {
     sign: "Capricorn", element: "Earth", modality: "Cardinal", ruler: "Saturn",
     keywords: ["ambition", "discipline", "responsibility", "reserve"],
     essence: "disciplined, ambitious, and focused on building something lasting",
-    shadow: "a guardedness that can shade into workaholism or emotional distance",
+    shadow: "guardedness that can shade into workaholism or emotional distance",
   },
   Aquarius: {
     sign: "Aquarius", element: "Air", modality: "Fixed", ruler: "Uranus",
@@ -81,6 +81,6 @@ export const SIGN_META: Record<Sign, SignMeta> = {
     sign: "Pisces", element: "Water", modality: "Mutable", ruler: "Neptune",
     keywords: ["imagination", "empathy", "spirituality", "escapism"],
     essence: "dreamy, compassionate, and porous to the moods around you",
-    shadow: "a pull toward escapism and blurry boundaries",
+    shadow: "escapism and blurry boundaries",
   },
 };
