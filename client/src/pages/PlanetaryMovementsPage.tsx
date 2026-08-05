@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchCurrentSky, fetchUpcomingEvents } from "../api/client";
-import type { TransitPlacement, UpcomingEventsResponse, Sign, MoonPhaseName } from "../api/types";
+import type { TransitPlacement, UpcomingEventsResponse, Sign, PlanetKey, MoonPhaseName } from "../api/types";
 import { PLANET_GLYPHS, SIGN_GLYPHS } from "../api/types";
 
 function formatDegree(degree: number): string {
@@ -18,7 +18,7 @@ const PHASE_LABEL: Record<MoonPhaseName, string> = {
 };
 
 type FeedItem =
-  | { kind: "ingress"; date: string; text: string }
+  | { kind: "ingress"; date: string; text: string; planet: PlanetKey; toSign: Sign }
   | { kind: "station"; date: string; text: string }
   | { kind: "moon"; date: string; text: string; phase: MoonPhaseName; sign: Sign };
 
@@ -29,6 +29,8 @@ function buildFeed(events: UpcomingEventsResponse): FeedItem[] {
       kind: "ingress",
       date: e.date,
       text: `${e.planet.replace("NorthNode", "North Node")} ${e.retrograde ? "re-enters" : "enters"} ${e.toSign}`,
+      planet: e.planet,
+      toSign: e.toSign,
     });
   }
   for (const e of events.stations) {
@@ -114,7 +116,12 @@ export function PlanetaryMovementsPage() {
             <span className="event-date">{new Date(item.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
             <span className="event-text">{item.text}</span>
             {item.kind === "moon" && (item.phase === "full-moon" || item.phase === "new-moon") && (
-              <Link className="btn-link" to={`/explorers?phase=${item.phase}&sign=${item.sign}`}>
+              <Link className="btn-link" to={`/explorers?tool=lunation&phase=${item.phase}&sign=${item.sign}`}>
+                Explain this →
+              </Link>
+            )}
+            {item.kind === "ingress" && (
+              <Link className="btn-link" to={`/explorers?tool=ingress&planet=${item.planet}&toSign=${item.toSign}`}>
                 Explain this →
               </Link>
             )}

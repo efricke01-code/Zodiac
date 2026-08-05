@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   fetchSignHouseInterpretation,
   fetchPlanetSignInterpretation,
+  fetchIngressInterpretation,
   fetchMoonEventInterpretation,
 } from "../api/client";
 import type { Sign, PlanetKey, MoonPhaseName } from "../api/types";
@@ -10,18 +11,26 @@ import { SIGNS, PLANET_KEYS } from "../api/types";
 
 export function ExplorersPage() {
   const [searchParams] = useSearchParams();
+  const tool = searchParams.get("tool");
 
   return (
     <section className="page">
       <h1>Explorers</h1>
       <p className="page-intro">
-        Three look-up tools for what any sign, house, planet, or lunation means — pick your
+        Four look-up tools for what any sign, house, planet, ingress, or lunation means — pick your
         combination and get a plain-English paragraph.
       </p>
 
       <SignHouseExplorer />
       <PlanetSignExplorer />
-      <LunationExplorer initialPhase={searchParams.get("phase") as MoonPhaseName | null} initialSign={searchParams.get("sign") as Sign | null} />
+      <IngressExplorer
+        initialPlanet={tool === "ingress" ? (searchParams.get("planet") as PlanetKey | null) : null}
+        initialToSign={tool === "ingress" ? (searchParams.get("toSign") as Sign | null) : null}
+      />
+      <LunationExplorer
+        initialPhase={tool !== "ingress" ? (searchParams.get("phase") as MoonPhaseName | null) : null}
+        initialSign={tool !== "ingress" ? (searchParams.get("sign") as Sign | null) : null}
+      />
     </section>
   );
 }
@@ -102,6 +111,62 @@ function PlanetSignExplorer() {
         </select>
         <button className="btn-primary" onClick={run} disabled={loading}>
           {loading ? "Loading…" : "Get Interpretation"}
+        </button>
+      </div>
+      {paragraph && <p className="explainer-result">{paragraph}</p>}
+    </div>
+  );
+}
+
+function IngressExplorer({ initialPlanet, initialToSign }: { initialPlanet: PlanetKey | null; initialToSign: Sign | null }) {
+  const [planet, setPlanet] = useState<PlanetKey>(initialPlanet ?? "Venus");
+  const [toSign, setToSign] = useState<Sign>(initialToSign ?? "Libra");
+  const [natalSign, setNatalSign] = useState<Sign>("Gemini");
+  const [natalPlanet, setNatalPlanet] = useState<PlanetKey>("Sun");
+  const [paragraph, setParagraph] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function run() {
+    setLoading(true);
+    try {
+      const res = await fetchIngressInterpretation(planet, toSign, natalSign, natalPlanet);
+      setParagraph(res.paragraph);
+    } catch (err) {
+      setParagraph(err instanceof Error ? err.message : "Could not load interpretation.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Auto-run if we arrived here pre-filled from the Planetary Movements feed's "Explain this" link.
+  useEffect(() => {
+    if (initialPlanet && initialToSign) run();
+  }, []); // intentionally mount-only: only auto-run once, from the initial query params
+
+  return (
+    <div className="explorer-block">
+      <h2>Planet Ingress Explorer</h2>
+      <p className="page-intro">
+        Venus is moving into Libra — what does that mean if you're a Gemini Sun? Pick an upcoming
+        planet + sign move and a natal placement to find out, with a bit of advice for using it well.
+      </p>
+      <div className="explorer-row">
+        <select value={planet} onChange={(e) => setPlanet(e.target.value as PlanetKey)}>
+          {PLANET_KEYS.map((p) => <option key={p} value={p}>{p.replace("NorthNode", "North Node")}</option>)}
+        </select>
+        <span>moving into</span>
+        <select value={toSign} onChange={(e) => setToSign(e.target.value as Sign)}>
+          {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <span>for my</span>
+        <select value={natalPlanet} onChange={(e) => setNatalPlanet(e.target.value as PlanetKey)}>
+          {PLANET_KEYS.map((p) => <option key={p} value={p}>{p.replace("NorthNode", "North Node")}</option>)}
+        </select>
+        <select value={natalSign} onChange={(e) => setNatalSign(e.target.value as Sign)}>
+          {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <button className="btn-primary" onClick={run} disabled={loading}>
+          {loading ? "Loading…" : "Explain"}
         </button>
       </div>
       {paragraph && <p className="explainer-result">{paragraph}</p>}

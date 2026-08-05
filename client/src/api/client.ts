@@ -70,6 +70,14 @@ export function fetchMoonEventInterpretation(
   );
 }
 
+export function fetchIngressInterpretation(
+  planet: PlanetKey, toSign: Sign, natalSign: Sign, natalPlanet: PlanetKey = "Sun",
+) {
+  return request<{ paragraph: string }>(
+    `/interpret/ingress?planet=${planet}&toSign=${toSign}&natalSign=${natalSign}&natalPlanet=${natalPlanet}`,
+  );
+}
+
 export function fetchTransitToNatalInterpretation(
   transitingPlanet: PlanetKey, transitSign: Sign, aspect: AspectType,
   natalPlanet: PlanetKey, natalSign: Sign, natalHouse: number,

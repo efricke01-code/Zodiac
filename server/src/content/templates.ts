@@ -76,6 +76,49 @@ export function transitToNatalParagraph(
   );
 }
 
+const INGRESS_DURATION: Record<PlanetKey, string> = {
+  Sun: "about a month",
+  Moon: "about two and a half days",
+  Mercury: "a few weeks (longer if it turns retrograde while there)",
+  Venus: "three to four weeks (longer if it turns retrograde while there)",
+  Mars: "about six to seven weeks",
+  Jupiter: "about a year",
+  Saturn: "about two and a half years",
+  Uranus: "about seven years",
+  Neptune: "about fourteen years",
+  Pluto: "roughly twenty years",
+  NorthNode: "about a year and a half",
+};
+
+/** Paragraph for the "Venus is moving into Libra — what does that mean for a Gemini Sun?" tool. */
+export function ingressForSignParagraph(
+  planet: PlanetKey,
+  toSign: Sign,
+  natalSign: Sign,
+  natalPlanet: PlanetKey = "Sun",
+): string {
+  const t = PLANET_META[planet];
+  const s = SIGN_META[toSign];
+  const ns = SIGN_META[natalSign];
+  const np = PLANET_META[natalPlanet];
+  const duration = INGRESS_DURATION[planet];
+
+  const sameElement = s.element === ns.element;
+  const relation = sameElement
+    ? `Because ${toSign} and your ${natalSign} ${np.title} share the ${s.element} element, this transit should feel natural and easy to work with`
+    : `Because ${toSign} is ${s.element} and your ${natalSign} ${np.title} is ${ns.element}, this transit may ask your ${np.title} to stretch a little outside its comfort zone`;
+
+  const focus = np.title === "Sun" ? "your sense of identity and purpose" : np.represents;
+
+  return (
+    `${t.title} is moving into ${toSign}, where it will stay for ${duration}, bringing themes of ` +
+    `${s.keywords.slice(0, 2).join(" and ")} to ${t.represents}. ` +
+    `For someone with their ${np.title} in ${natalSign} — ${ns.essence} — ${relation}. ` +
+    `A bit of advice: use this transit to lean into ${s.keywords[0]} around ${focus}, while staying mindful of ` +
+    `${toSign}'s pull toward ${s.shadow}${sameElement ? "" : `, since it isn't naturally ${ns.element.toLowerCase()} like your ${natalSign} ${np.title}`}.`
+  );
+}
+
 /** Paragraph for the "full moon in Leo — what does this mean for a Taurus Sun?" tool. */
 export function moonEventForSignParagraph(
   phase: "new-moon" | "first-quarter" | "full-moon" | "last-quarter",

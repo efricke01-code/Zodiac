@@ -3,7 +3,8 @@
 A full astrology web app in four parts: a **Birth Chart** calculator, a personal **Horoscope**
 (daily/weekly/monthly/yearly, generated from real current transits against your natal chart), a
 **Planetary Movements** page for what's happening in the sky right now and what's coming up, and
-an **Explorers** page with three look-up tools (sign + house, planet + sign, and lunation).
+an **Explorers** page with four look-up tools (sign + house, planet + sign, planet ingress, and
+lunation).
 
 Planetary positions are computed with [astronomy-engine](https://github.com/cosinekitty/astronomy)
 (geocentric, apparent, true-ecliptic-of-date — the standard tropical zodiac reference frame), not
@@ -75,11 +76,13 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
   transits for the monthly/yearly views), and generates a paragraph per aspect.
 - **Planetary Movements**: shows today's planetary positions and a scrollable feed of upcoming sign
   ingresses, retrograde/direct stations, and Moon phases (found numerically, not from a static
-  table). Full/New Moon entries link straight into the matching Lunation Explorer tool, pre-filled.
-- **Explorers**: three independent look-up tools on one page — pick a sign + house (e.g. Leo in the
+  table). Ingress and Full/New Moon entries link straight into the matching Explorers tool, pre-filled
+  and auto-run.
+- **Explorers**: four independent look-up tools on one page — pick a sign + house (e.g. Leo in the
   12th House), a planet + sign (e.g. Pluto in Scorpio — called out specially when it's the planet's
-  own "domicile" sign), or a Moon phase + sign + a natal placement (e.g. "Full Moon in Leo, for a
-  Taurus Sun") — each returns a plain-English paragraph.
+  own "domicile" sign), an upcoming planet ingress + a natal placement (e.g. "Venus moving into
+  Libra, for a Gemini Sun," with a line of practical advice), or a Moon phase + sign + a natal
+  placement (e.g. "Full Moon in Leo, for a Taurus Sun") — each returns a plain-English paragraph.
 
 ## Notes
 

@@ -11,7 +11,7 @@ import { SIGN_META } from "../content/signs.js";
 import { HOUSE_META } from "../content/houses.js";
 import { PLANET_META } from "../content/planets.js";
 import { ASPECT_META } from "../content/aspectMeta.js";
-import { planetSignHouseParagraph, planetSignParagraph, signHouseParagraph, moonEventForSignParagraph, transitToNatalParagraph } from "../content/templates.js";
+import { planetSignHouseParagraph, planetSignParagraph, signHouseParagraph, moonEventForSignParagraph, ingressForSignParagraph, transitToNatalParagraph } from "../content/templates.js";
 import { ASPECT_DEFS } from "../astro/aspects.js";
 
 export const apiRouter = Router();
@@ -215,6 +215,18 @@ apiRouter.get("/interpret/moon-event", (req, res) => {
     const natalSign = signEnum.parse(req.query.natalSign);
     const natalPlanet = req.query.natalPlanet ? planetEnum.parse(req.query.natalPlanet) : "Sun";
     res.json({ paragraph: moonEventForSignParagraph(phase, eventSign, natalSign, natalPlanet) });
+  } catch (err) {
+    handleError(res, err);
+  }
+});
+
+apiRouter.get("/interpret/ingress", (req, res) => {
+  try {
+    const planet = planetEnum.parse(req.query.planet);
+    const toSign = signEnum.parse(req.query.toSign);
+    const natalSign = signEnum.parse(req.query.natalSign);
+    const natalPlanet = req.query.natalPlanet ? planetEnum.parse(req.query.natalPlanet) : "Sun";
+    res.json({ paragraph: ingressForSignParagraph(planet, toSign, natalSign, natalPlanet) });
   } catch (err) {
     handleError(res, err);
   }
