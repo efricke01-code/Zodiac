@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "install:all": "npm install --include=dev --prefix server && npm install --include=dev --prefix client",
+    "postinstall": "npm install --include=dev --prefix server && npm install --include=dev --prefix client",
     "dev": "concurrently -n server,client -c blue,magenta \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
