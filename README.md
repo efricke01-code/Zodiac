@@ -83,11 +83,12 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
   ingresses, retrograde/direct stations, and Moon phases (found numerically, not from a static
   table). Ingress and Full/New Moon entries link straight into the matching Explorers tool, pre-filled
   and auto-run.
-- **Explorers**: four independent look-up tools on one page — pick a sign + house (e.g. Leo in the
+- **Explorers**: five independent look-up tools on one page — pick a sign + house (e.g. Leo in the
   12th House), a planet + sign (e.g. Pluto in Scorpio — called out specially when it's the planet's
-  own "domicile" sign), an upcoming planet ingress + a natal placement (e.g. "Venus moving into
-  Libra, for a Gemini Sun," with a line of practical advice), or a Moon phase + sign + a natal
-  placement (e.g. "Full Moon in Leo, for a Taurus Sun") — each returns a plain-English paragraph.
+  own "domicile" sign), a full planet + sign + house combination (e.g. Pluto in Scorpio in the 4th
+  House), an upcoming planet ingress + a natal placement (e.g. "Venus moving into Libra, for a
+  Gemini Sun," with a line of practical advice), or a Moon phase + sign + a natal placement (e.g.
+  "Full Moon in Leo, for a Taurus Sun") — each returns a plain-English paragraph.
 
 ## Notes
 

@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   fetchSignHouseInterpretation,
   fetchPlanetSignInterpretation,
+  fetchPlacementInterpretation,
   fetchIngressInterpretation,
   fetchMoonEventInterpretation,
 } from "../api/client";
@@ -17,12 +18,13 @@ export function ExplorersPage() {
     <section className="page">
       <h1>Explorers</h1>
       <p className="page-intro">
-        Four look-up tools for what any sign, house, planet, ingress, or lunation means — pick your
+        Five look-up tools for what any sign, house, planet, ingress, or lunation means — pick your
         combination and get a plain-English paragraph.
       </p>
 
       <SignHouseExplorer />
       <PlanetSignExplorer />
+      <PlanetSignHouseExplorer />
       <IngressExplorer
         initialPlanet={tool === "ingress" ? (searchParams.get("planet") as PlanetKey | null) : null}
         initialToSign={tool === "ingress" ? (searchParams.get("toSign") as Sign | null) : null}
@@ -108,6 +110,53 @@ function PlanetSignExplorer() {
         <span>in</span>
         <select value={sign} onChange={(e) => setSign(e.target.value as Sign)}>
           {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <button className="btn-primary" onClick={run} disabled={loading}>
+          {loading ? "Loading…" : "Get Interpretation"}
+        </button>
+      </div>
+      {paragraph && <p className="explainer-result">{paragraph}</p>}
+    </div>
+  );
+}
+
+function PlanetSignHouseExplorer() {
+  const [planet, setPlanet] = useState<PlanetKey>("Pluto");
+  const [sign, setSign] = useState<Sign>("Scorpio");
+  const [house, setHouse] = useState(4);
+  const [paragraph, setParagraph] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function run() {
+    setLoading(true);
+    try {
+      const res = await fetchPlacementInterpretation(planet, sign, house, false);
+      setParagraph(res.paragraph);
+    } catch (err) {
+      setParagraph(err instanceof Error ? err.message : "Could not load interpretation.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="explorer-block">
+      <h2>Planet + Sign + House Explorer</h2>
+      <p className="page-intro">
+        Pick a planet, a sign, and a house — for example Pluto in Scorpio in the 4th House — and get
+        a paragraph on the common theme for that full placement.
+      </p>
+      <div className="explorer-row">
+        <select value={planet} onChange={(e) => setPlanet(e.target.value as PlanetKey)}>
+          {PLANET_KEYS.map((p) => <option key={p} value={p}>{p.replace("NorthNode", "North Node")}</option>)}
+        </select>
+        <span>in</span>
+        <select value={sign} onChange={(e) => setSign(e.target.value as Sign)}>
+          {SIGNS.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <span>in the</span>
+        <select value={house} onChange={(e) => setHouse(Number(e.target.value))}>
+          {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => <option key={h} value={h}>House {h}</option>)}
         </select>
         <button className="btn-primary" onClick={run} disabled={loading}>
           {loading ? "Loading…" : "Get Interpretation"}
