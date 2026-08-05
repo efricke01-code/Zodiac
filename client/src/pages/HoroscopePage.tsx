@@ -18,18 +18,21 @@ export function HoroscopePage() {
   const [result, setResult] = useState<HoroscopeResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Never auto-reveal a saved chart's horoscope — same reasoning as the Birth Chart page: a saved
+  // profile in this browser shouldn't be shown to whoever opens the page next without asking first.
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    if (!profile) return;
+    if (!profile || !revealed) return;
     setLoading(true);
     setError(null);
     fetchHoroscope(profile.chart, period)
       .then(setResult)
       .catch((err) => setError(err instanceof Error ? err.message : "Could not load horoscope."))
       .finally(() => setLoading(false));
-  }, [profile, period]);
+  }, [profile, revealed, period]);
 
-  if (!profile) {
+  if (!profile || !revealed) {
     return (
       <section className="page">
         <h1>Horoscope</h1>
@@ -37,7 +40,17 @@ export function HoroscopePage() {
           Your horoscope is generated from real current planetary movements measured against your
           natal chart. Enter your birth details once and it will be reused here automatically.
         </p>
-        <BirthInputForm />
+
+        {profile && (
+          <div className="saved-chart-banner">
+            <span>A previously saved chart ({profile.label}) is stored in this browser.</span>
+            <div className="saved-chart-banner-actions">
+              <button className="btn-secondary" onClick={() => setRevealed(true)}>View my horoscope</button>
+            </div>
+          </div>
+        )}
+
+        <BirthInputForm onComplete={() => setRevealed(true)} />
       </section>
     );
   }

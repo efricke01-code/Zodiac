@@ -6,9 +6,12 @@ import { PlacementTable } from "../components/PlacementTable";
 
 export function BirthChartPage() {
   const { profile, clearProfile } = useChartProfile();
-  const [editing, setEditing] = useState(false);
+  // Always start on the form, even if a chart is already saved in this browser — showing someone
+  // else's birth details automatically (e.g. after handing off a device, or on a shared link) is
+  // exactly what we don't want. Viewing a saved chart is an explicit action, never the default.
+  const [view, setView] = useState<"form" | "chart">("form");
 
-  if (!profile || editing) {
+  if (view === "form" || !profile) {
     return (
       <section className="page">
         <h1>Birth Chart</h1>
@@ -17,7 +20,18 @@ export function BirthChartPage() {
           Midheaven, all ten planets plus the North Node, the houses they fall in, and the major
           aspects between them.
         </p>
-        <BirthInputForm onComplete={() => setEditing(false)} />
+
+        {profile && (
+          <div className="saved-chart-banner">
+            <span>A previously saved chart ({profile.label}) is stored in this browser.</span>
+            <div className="saved-chart-banner-actions">
+              <button className="btn-secondary" onClick={() => setView("chart")}>View saved chart</button>
+              <button className="btn-danger" onClick={clearProfile}>Forget it</button>
+            </div>
+          </div>
+        )}
+
+        <BirthInputForm onComplete={() => setView("chart")} />
       </section>
     );
   }
@@ -31,7 +45,7 @@ export function BirthChartPage() {
             {profile.place} · {profile.birthInput.date} at {profile.birthInput.time} ({profile.timezone})
           </p>
         </div>
-        <button className="btn-secondary" onClick={() => setEditing(true)}>Edit birth details</button>
+        <button className="btn-secondary" onClick={() => setView("form")}>Edit birth details</button>
       </div>
 
       <div className="wheel-layout">
@@ -41,10 +55,11 @@ export function BirthChartPage() {
 
       <PlacementTable chart={profile.chart} />
 
-      <details className="danger-zone">
-        <summary>Start over</summary>
-        <button className="btn-danger" onClick={clearProfile}>Clear saved birth chart</button>
-      </details>
+      <div className="danger-zone">
+        <button className="btn-danger" onClick={() => { clearProfile(); setView("form"); }}>
+          Clear saved birth chart from this browser
+        </button>
+      </div>
     </section>
   );
 }

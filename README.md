@@ -90,6 +90,12 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
 
 ## Notes
 
+- **Privacy on shared links/devices**: birth data lives only in the visiting browser's
+  `localStorage` — the server never stores it. Because a link doesn't carry any per-user identity,
+  the Birth Chart and Horoscope pages always open on the blank input form by default, even if a
+  chart is already saved in that browser. If one is, a small banner offers to reveal it, but nothing
+  personal is shown until that's clicked — so sending someone your link, or handing off a device,
+  doesn't expose whatever was last entered there.
 - All interpretive text is generated from structured trait data (per sign, house, planet, and
   aspect) combined by templates — the same approach most astrology content engines use — rather
   than a fixed library of pre-written paragraphs, so every placement/house/transit combination is
