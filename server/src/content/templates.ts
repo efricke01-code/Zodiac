@@ -5,8 +5,15 @@ import { HOUSE_META } from "./houses.js";
 import { PLANET_META } from "./planets.js";
 import { ASPECT_META } from "./aspectMeta.js";
 
-function article(word: string): string {
-  return /^[aeiou]/i.test(word) ? "an" : "a";
+/** "1st", "2nd", "3rd", "4th", ... "12th" */
+function ordinal(n: number): string {
+  if (n % 100 >= 11 && n % 100 <= 13) return `${n}th`;
+  switch (n % 10) {
+    case 1: return `${n}st`;
+    case 2: return `${n}nd`;
+    case 3: return `${n}rd`;
+    default: return `${n}th`;
+  }
 }
 
 /** Paragraph describing a single natal placement: a planet, in a sign, in a house. */
@@ -20,12 +27,13 @@ export function planetSignHouseParagraph(
   const s = SIGN_META[sign];
   const h = HOUSE_META[house];
   const retroClause = retrograde
-    ? ` It is retrograde here, so this energy tends to work first through reflection and revision, turning inward before it shows up outwardly.`
+    ? ` It's retrograde here, so this energy tends to work inward first — more reflection and revisiting than outward action.`
     : "";
   return (
-    `${p.title} represents ${p.represents}. Placed in ${sign}, it takes on ${article(s.essence)} ${s.essence} quality, ` +
-    `for better (${s.keywords.slice(0, 2).join(" and ")}) and for worse (${s.shadow}). ` +
-    `Sitting in your ${h.title.replace("House of ", "")} (House ${house}), this plays out most strongly around ${h.domain}.${retroClause}`
+    `${p.title} governs ${p.represents}. In ${sign}, that tends to come out as ${s.essence}. ` +
+    `Landing in your ${ordinal(house)} House, that same energy plays out through ${h.expression} — so expect ` +
+    `${s.keywords[0]} and ${s.keywords[1]} to color that part of your life. ` +
+    `The growth edge to watch for is ${s.shadow}.${retroClause}`
   );
 }
 
@@ -34,10 +42,9 @@ export function signHouseParagraph(sign: Sign, house: number): string {
   const s = SIGN_META[sign];
   const h = HOUSE_META[house];
   return (
-    `${sign} energy is ${s.essence}. Expressed through the ${h.title} (House ${house}), which governs ${h.domain}, ` +
-    `this shows up as a ${s.element.toLowerCase()}-toned, ${s.modality.toLowerCase()} approach to ${h.keywords.join(", ")}. ` +
-    `You likely bring ${s.keywords[0]} and ${s.keywords[1]} to this part of life, while the growth edge to watch for is ${s.shadow}. ` +
-    `Ruled by ${s.ruler}, this placement asks you to let ${s.ruler}'s themes color how you handle ${h.keywords[0]}.`
+    `${sign} is ${s.essence}. In your ${ordinal(house)} House, that comes out through ${h.expression}, ` +
+    `most often through ${s.keywords[0]} and ${s.keywords[1]}. The growth edge to watch for is ${s.shadow}. ` +
+    `Ruled by ${s.ruler}, this placement channels ${s.ruler}'s themes into that part of your life.`
   );
 }
 
@@ -50,8 +57,8 @@ export function planetSignParagraph(planet: PlanetKey, sign: Sign): string {
     ? ` This is what astrologers call a "domicile" placement — ${sign} is ${p.title}'s own home sign, so this energy tends to express itself clearly, comfortably, and with real strength.`
     : "";
   return (
-    `${p.title} represents ${p.represents}. Placed in ${sign}, it takes on ${article(s.essence)} ${s.essence} quality: ` +
-    `expect themes of ${s.keywords.slice(0, 2).join(" and ")} to color how it shows up, tempered by ${sign}'s pull toward ${s.shadow}.` +
+    `${p.title} governs ${p.represents}. In ${sign}, that comes out as ${s.essence} — ` +
+    `expect ${s.keywords[0]} and ${s.keywords[1]} to color how it shows up, tempered by a pull toward ${s.shadow}.` +
     `${domicileClause} Ruled by ${s.ruler}, ${sign} filters ${p.title}'s themes of ${p.keyword} through a ${s.element.toLowerCase()}, ${s.modality.toLowerCase()} lens.`
   );
 }
@@ -64,8 +71,8 @@ export function ascendantParagraph(sign: Sign): string {
     `most important placements in a chart, often ranked right alongside your Sun and Moon signs. ` +
     `While your Sun describes your core identity, your Ascendant describes your outward style: the ` +
     `first impression you give, your instinctive reactions, and even your physical demeanor — the ` +
-    `"mask" you meet the world with. ${sign} rising tends to come across as ${article(s.essence)} ${s.essence}, ` +
-    `leaning on ${s.keywords.slice(0, 2).join(" and ")} — though the shadow side to watch for is ${s.shadow}. ` +
+    `"mask" you meet the world with. ${sign} rising tends to come across as ${s.essence}, ` +
+    `leaning on ${s.keywords[0]} and ${s.keywords[1]} — though the shadow side to watch for is ${s.shadow}. ` +
     `Ruled by ${s.ruler}, this sign also marks the start of your House 1, the House of Self.`
   );
 }
@@ -77,7 +84,7 @@ export function midheavenParagraph(sign: Sign): string {
     `Your Midheaven is in ${sign} — often shortened to "MC." It's the highest point of the chart, ` +
     `associated with your career, public reputation, and the direction your life is heading — the ` +
     `image you build for the wider world, as opposed to your private inner life. A ${sign} Midheaven ` +
-    `tends to seek recognition through ${s.keywords.slice(0, 2).join(" and ")}, while the growth edge ` +
+    `tends to seek recognition through ${s.keywords[0]} and ${s.keywords[1]}, while the growth edge ` +
     `to watch for professionally is ${s.shadow}. Ruled by ${s.ruler}, this sign also marks the start ` +
     `of your House 10, the House of Vocation.`
   );
@@ -98,7 +105,7 @@ export function transitToNatalParagraph(
   const h = HOUSE_META[natalHouse];
   return (
     `Transiting ${t.title} in ${transitSign} ${a.verb} your natal ${n.title} in ${natalSign} — ${a.description}. ` +
-    `Because your ${n.title} sits in your ${h.title} (House ${natalHouse}), expect this to be most noticeable around ${h.domain}. ` +
+    `Because your ${n.title} sits in your ${ordinal(natalHouse)} House, expect this to be most noticeable around ${h.expression}. ` +
     `In practice, this is a window to pay attention to ${n.represents}, filtered through ${t.title}'s theme of ${t.keyword}.`
   );
 }
@@ -139,7 +146,7 @@ export function ingressForSignParagraph(
 
   return (
     `${t.title} is moving into ${toSign}, where it will stay for ${duration}, bringing themes of ` +
-    `${s.keywords.slice(0, 2).join(" and ")} to ${t.represents}. ` +
+    `${s.keywords[0]} and ${s.keywords[1]} to ${t.represents}. ` +
     `For someone with their ${np.title} in ${natalSign} — ${ns.essence} — ${relation}. ` +
     `A bit of advice: use this transit to lean into ${s.keywords[0]} around ${focus}, while staying mindful of ` +
     `${toSign}'s pull toward ${s.shadow}${sameElement ? "" : `, since it isn't naturally ${ns.element.toLowerCase()} like your ${natalSign} ${np.title}`}.`
@@ -175,7 +182,7 @@ export function moonEventForSignParagraph(
     : `Because ${eventSign} is ${es.element} and your ${natalSign} ${p.title} is ${ns.element}, this lunation may feel like it is asking your ${p.title} to stretch a little outside its comfort zone`;
 
   return (
-    `The ${phaseLabel[phase]} in ${eventSign} brings ${phaseMeaning[phase]}, colored by ${eventSign}'s themes of ${es.keywords.slice(0, 2).join(" and ")}. ` +
+    `The ${phaseLabel[phase]} in ${eventSign} brings ${phaseMeaning[phase]}, colored by ${eventSign}'s themes of ${es.keywords[0]} and ${es.keywords[1]}. ` +
     `For someone with their ${p.title} in ${natalSign} — ${ns.essence} — ${relation}. ` +
     `A good use of this lunation: apply its ${es.keywords[0]} energy to ${p.title === "Sun" ? "your sense of identity and purpose" : p.represents}, ` +
     `while staying mindful of ${natalSign}'s tendency toward ${ns.shadow}.`

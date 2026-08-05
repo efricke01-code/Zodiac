@@ -154,6 +154,7 @@ export interface HouseMeta {
   title: string;
   domain: string;
   keywords: string[];
+  expression: string;
 }
 
 export interface PlanetMeta {

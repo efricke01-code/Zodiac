@@ -80,7 +80,7 @@ export const SIGN_META: Record<Sign, SignMeta> = {
   Pisces: {
     sign: "Pisces", element: "Water", modality: "Mutable", ruler: "Neptune",
     keywords: ["imagination", "empathy", "spirituality", "escapism"],
-    essence: "dreamy, compassionate, and porous to the moods around them",
+    essence: "dreamy, compassionate, and porous to the moods around you",
     shadow: "a pull toward escapism and blurry boundaries",
   },
 };

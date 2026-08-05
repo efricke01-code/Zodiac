@@ -23,7 +23,7 @@ export const PLANET_META: Record<PlanetKey, PlanetMeta> = {
   },
   Venus: {
     planet: "Venus", title: "Venus", represents: "how you love, relate, and find pleasure and beauty",
-    keyword: "love & values", speed: "personal",
+    keyword: "love and values", speed: "personal",
   },
   Mars: {
     planet: "Mars", title: "Mars", represents: "your drive, assertiveness, and how you take action",
