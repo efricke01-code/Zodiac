@@ -139,6 +139,72 @@ export interface HoroscopeResult {
   keyTransits: HoroscopeKeyTransit[];
 }
 
+export interface SignMeta {
+  sign: Sign;
+  element: "Fire" | "Earth" | "Air" | "Water";
+  modality: "Cardinal" | "Fixed" | "Mutable";
+  ruler: string;
+  keywords: string[];
+  essence: string;
+  shadow: string;
+}
+
+export interface HouseMeta {
+  house: number;
+  title: string;
+  domain: string;
+  keywords: string[];
+}
+
+export interface PlanetMeta {
+  planet: PlanetKey;
+  title: string;
+  represents: string;
+  keyword: string;
+  speed: "personal" | "social" | "generational";
+}
+
+export interface AspectMeta {
+  type: AspectType;
+  verb: string;
+  description: string;
+}
+
+export interface AspectDef {
+  type: AspectType;
+  angle: number;
+  orb: number;
+  nature: "harmonious" | "dynamic" | "neutral";
+}
+
+export interface ElementMeta {
+  title: string;
+  signs: string[];
+  description: string;
+}
+
+export interface ModalityMeta {
+  title: string;
+  signs: string[];
+  description: string;
+}
+
+export interface ChartTerm {
+  term: string;
+  definition: string;
+}
+
+export interface ApiMeta {
+  signs: Record<Sign, SignMeta>;
+  houses: Record<number, HouseMeta>;
+  planets: Record<PlanetKey, PlanetMeta>;
+  aspects: Record<AspectType, AspectMeta>;
+  aspectDefs: AspectDef[];
+  elements: Record<"Fire" | "Earth" | "Air" | "Water", ElementMeta>;
+  modalities: Record<"Cardinal" | "Fixed" | "Mutable", ModalityMeta>;
+  chartTerms: ChartTerm[];
+}
+
 export interface BirthInput {
   date: string;
   time: string;

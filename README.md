@@ -1,10 +1,10 @@
 # Zodiac
 
-A full astrology web app in four parts: a **Birth Chart** calculator, a personal **Horoscope**
-(daily/weekly/monthly/yearly, generated from real current transits against your natal chart), a
-**Planetary Movements** page for what's happening in the sky right now and what's coming up, and
-an **Explorers** page with four look-up tools (sign + house, planet + sign, planet ingress, and
-lunation).
+A full astrology web app in five parts: a **Beginner's Guide** for anyone new to astrology, a
+**Birth Chart** calculator, a personal **Horoscope** (daily/weekly/monthly/yearly, generated from
+real current transits against your natal chart), a **Planetary Movements** page for what's
+happening in the sky right now and what's coming up, and an **Explorers** page with four look-up
+tools (sign + house, planet + sign, planet ingress, and lunation).
 
 Planetary positions are computed with [astronomy-engine](https://github.com/cosinekitty/astronomy)
 (geocentric, apparent, true-ecliptic-of-date — the standard tropical zodiac reference frame), not
@@ -16,7 +16,7 @@ latitudes), with Equal House as an option.
 
 ```
 server/   Express + TypeScript API: chart math, geocoding, timezone resolution, horoscope/content generation
-client/   Vite + React + TypeScript UI: four pages (Birth Chart, Horoscope, Planetary Movements, Explorers)
+client/   Vite + React + TypeScript UI: five pages (Beginner's Guide, Birth Chart, Horoscope, Planetary Movements, Explorers)
 ```
 
 ## Running it locally
@@ -63,6 +63,10 @@ Note for free tiers: services on Render's free plan sleep after a period of inac
 
 ## How it works
 
+- **Beginner's Guide**: a plain-language reference for anyone who's never read a birth chart —
+  elements, modalities, all 12 signs, all 11 planets/points, all 12 houses, the 5 major aspects, and
+  a glossary of chart terms (Ascendant, Midheaven, Descendant, IC, retrograde, transit, orb, etc.),
+  plus a one-paragraph framing of how to read any chart (planet = what, sign = how, house = where).
 - **Birth Chart**: enter a date, time, and place. The place is geocoded via OpenStreetMap's free
   Nominatim service, and the local time is converted to UTC using the place's real IANA time zone
   (via `geo-tz` + `luxon`, so historical DST rules are respected). The server then computes the

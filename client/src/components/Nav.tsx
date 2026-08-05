@@ -5,6 +5,9 @@ export function Nav() {
     <header className="app-header">
       <div className="brand">✨ Zodiac</div>
       <nav className="app-nav">
+        <NavLink to="/guide" className={({ isActive }) => (isActive ? "nav-link nav-link--active" : "nav-link")}>
+          Beginner's Guide
+        </NavLink>
         <NavLink to="/" end className={({ isActive }) => (isActive ? "nav-link nav-link--active" : "nav-link")}>
           Birth Chart
         </NavLink>

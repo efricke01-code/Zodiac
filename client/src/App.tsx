@@ -4,6 +4,7 @@ import { BirthChartPage } from "./pages/BirthChartPage";
 import { HoroscopePage } from "./pages/HoroscopePage";
 import { PlanetaryMovementsPage } from "./pages/PlanetaryMovementsPage";
 import { ExplorersPage } from "./pages/ExplorersPage";
+import { GuidePage } from "./pages/GuidePage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/horoscope" element={<HoroscopePage />} />
           <Route path="/movements" element={<PlanetaryMovementsPage />} />
           <Route path="/explorers" element={<ExplorersPage />} />
+          <Route path="/guide" element={<GuidePage />} />
         </Routes>
       </main>
       <footer className="app-footer">

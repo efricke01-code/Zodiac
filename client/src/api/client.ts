@@ -1,7 +1,7 @@
 import type {
   BirthChartResponse, BirthInput, GeocodeResult, UpcomingEventsResponse,
   HoroscopeResult, HoroscopePeriod, NatalChart, TransitPlacement,
-  Sign, PlanetKey, AspectType, MoonPhaseName,
+  Sign, PlanetKey, AspectType, MoonPhaseName, ApiMeta,
 } from "./types";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -14,6 +14,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(body.error ?? `Request failed (${res.status})`);
   }
   return res.json() as Promise<T>;
+}
+
+export function fetchMeta() {
+  return request<ApiMeta>("/meta");
 }
 
 export function geocodePlace(query: string) {

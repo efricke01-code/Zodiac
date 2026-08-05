@@ -13,6 +13,7 @@ import { PLANET_META } from "../content/planets.js";
 import { ASPECT_META } from "../content/aspectMeta.js";
 import { planetSignHouseParagraph, planetSignParagraph, signHouseParagraph, moonEventForSignParagraph, ingressForSignParagraph, transitToNatalParagraph } from "../content/templates.js";
 import { ASPECT_DEFS } from "../astro/aspects.js";
+import { ELEMENT_META, MODALITY_META, CHART_TERMS } from "../content/guide.js";
 
 export const apiRouter = Router();
 
@@ -33,6 +34,9 @@ apiRouter.get("/meta", (_req, res) => {
     planets: PLANET_META,
     aspects: ASPECT_META,
     aspectDefs: ASPECT_DEFS,
+    elements: ELEMENT_META,
+    modalities: MODALITY_META,
+    chartTerms: CHART_TERMS,
   });
 });
 
