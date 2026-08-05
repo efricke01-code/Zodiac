@@ -29,8 +29,8 @@ export function computeAngles(dateUtc: Date, latitude: number, longitude: number
   const midheaven = normalizeDegrees(mcRad * R2D);
 
   const ascRad = Math.atan2(
-    -Math.cos(ramcRad),
-    Math.sin(oblRad) * Math.tan(latRad) + Math.cos(oblRad) * Math.sin(ramcRad),
+    Math.cos(ramcRad),
+    -(Math.sin(oblRad) * Math.tan(latRad) + Math.cos(oblRad) * Math.sin(ramcRad)),
   );
   const ascendant = normalizeDegrees(ascRad * R2D);
 
